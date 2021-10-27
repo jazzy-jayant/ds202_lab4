@@ -1,0 +1,246 @@
+---
+title: 'Lab 4- Jayant Shah'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading Data:
+
+```{r}
+library(readxl)
+# Read Defensive
+defense = read_excel('C:/Users/Jayant Shah/Downloads/2020 data file.xlsx', sheet = 'Defensive')
+str(defense)
+# Read Offensive
+offense = read_excel('C:/Users/Jayant Shah/Downloads/2020 data file.xlsx', sheet = 'Offensive')
+str(offense)
+# Read Biography
+biography = read_excel('C:/Users/Jayant Shah/Downloads/2020 data file.xlsx', sheet = 'Biography')
+str(biography)
+```
+
+# Part One
+
+1. 
+
+```{r}
+defense$Name = as.factor(defense$Name)
+defense$Opponent_Opponent = as.factor(defense$Opponent_Opponent)
+offense$Name = as.factor(offense$Name)
+offense$Opponent_Opponent = as.factor(offense$Opponent_Opponent)
+```
+
+2.
+
+```{r}
+library(dplyr)
+defClean = defense %>% mutate(across(where(is.character), as.numeric))
+offClean = offense %>% mutate(across(where(is.character), as.numeric))
+biography$Weight = as.numeric(biography$Weight)
+```
+
+3. 
+
+```{r}
+# Height is measured in foot
+biography$Height = as.numeric(gsub("-", ".", biography$Height))
+bioClean = biography
+```
+
+4.
+
+```{r}
+defClean$game = ifelse(defClean$Opponent_Opponent == "Oklahoma St.", "second", "first")
+offClean$game = ifelse(offClean$Opponent_Opponent == "Oklahoma St.", "second", "first")
+```
+
+The structures of the data frames
+
+defClean:
+
+```{r}
+str(defClean)
+```
+
+offClean:
+
+```{r}
+str(offClean)
+```
+
+
+bioClean:
+
+```{r}
+str(bioClean)
+```
+
+# Part Two
+
+1.
+
+```{r}
+library(tidyr)
+offClean_tydi = offClean[,1:12] %>%
+  pivot_longer(!c(Name, Opponent_Opponent), names_to = "stat", values_to = "count")
+head(offClean_tydi,10)
+```
+
+2. 
+
+```{r}
+df2_2 = offClean_tydi %>% group_by(Name, stat) %>% summarise(n=sum(count))
+head(df2_2,10)
+```
+
+3.
+
+Passing_CMP-ATT distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Passing_CMP-ATT")$n, na.rm = T)>0
+```
+
+Here any observations not equal to NA.
+
+Passing_INT distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Passing_INT")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Passing_INT")$n, main = "Distribution of Passing_INT", xlab = "Passing_INT", breaks = 10)
+```
+
+Passing_TD distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Passing_TD")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Passing_TD")$n, main = "Distribution of Passing_TD", xlab = "Passing_TD", breaks = 10)
+```
+
+Passing_YDS distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Passing_YDS")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Passing_YDS")$n, main = "Distribution of Passing_YDS", xlab = "Passing_YDS", breaks = 10)
+```
+
+Receiving_REC distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Receiving_REC")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Receiving_REC")$n, main = "Distribution of Receiving_REC", xlab = "Receiving_REC", breaks = 10)
+```
+
+Receiving_TD distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Receiving_TD")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Receiving_TD")$n, main = "Distribution of Receiving_TD", xlab = "Receiving_TD", breaks = 10)
+```
+
+
+Receiving_YDS distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Receiving_YDS")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Receiving_YDS")$n, main = "Distribution of Receiving_YDS", xlab = "Receiving_YDS", breaks = 10)
+```
+
+Rushing_ATT distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Rushing_ATT")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Rushing_ATT")$n, main = "Distribution of Rushing_ATT", xlab = "Rushing_ATT", breaks = 10)
+```
+
+Rushing_TD distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Rushing_TD")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Rushing_TD")$n, main = "Distribution of Rushing_TD", xlab = "Rushing_TD", breaks = 10)
+```
+
+Rushing_YDS distribution:
+
+```{r}
+sum(subset(df2_2, df2_2$stat=="Rushing_YDS")$n, na.rm = T)>0
+```
+Here are observations not equal to NA.
+
+```{r}
+hist(subset(df2_2, df2_2$stat=="Rushing_YDS")$n, main = "Distribution of Rushing_YDS", xlab = "Rushing_YDS", breaks = 10)
+```
+
+
+There are no Passing_CMP-ATT observations. Only one non-zero value each for Passing_INT, Passing_TD and Passing_YDS.
+
+4. 
+
+```{r}
+df2_4_Oregon = subset(offClean, offClean$Opponent_Opponent == "Oregon")
+df2_4_Oklahoma = subset(offClean, offClean$Opponent_Opponent == "Oklahoma")
+plot(df2_4_Oregon$Receiving_YDS, ylab = "Receiving_YDS", main = "Opponent Oregon")
+plot(df2_4_Oklahoma$Receiving_YDS, ylab = "Receiving_YDS", main = "Opponent Oklahoma")
+```
+
+ISU have better offense against Oklahoma.
+
+## Now turn attention to the player biography.
+
+4.
+
+```{r}
+bioClean_sep = bioClean %>% separate(Hometown, c("City","State"), sep = "([,])")
+head(bioClean_sep, 10)
+```
+
+5.
+
+```{r}
+bioClean_sep %>% group_by(State) %>% summarise(number_of_players=n())
+```
+
+6.
+
+The performance of quarterback Brock Purdy:
+ 
+```{r}
+subset(offClean_tydi, offClean_tydi$Name == "Purdy, Brock") %>% group_by(stat) %>% summarise(n=sum(count))
+```
+
+
